@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-Аналитик продаж</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">AA</span>
+          <div class="brand-text">
+            <div class="eyebrow">
+              <span class="dot" id="statusDot"></span>
+              <span id="statusText">проверка соединения…</span>
+            </div>
+            <h1>AI&#8209;Аналитик продаж</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="model-select">
+            <label for="modelSelect">модель</label>
+            <select id="modelSelect">
+              <option value="">—</option>
+            </select>
+          </div>
+          <button id="settingsBtn" class="icon-btn" title="Настройки подключения" type="button">&#9881;</button>
+        </div>
+      </header>
+
+      <div id="settingsPanel" class="settings-panel hidden">
+        <label for="apiBaseInput">URL бэкенда (FastAPI)</label>
+        <input id="apiBaseInput" type="text" placeholder="http://localhost:8000" />
+        <button id="apiBaseSave" type="button">Сохранить</button>
+      </div>
+
+      <main class="workspace">
+        <section class="panel panel-session">
+          <div class="panel-head"><span class="panel-index">01</span>Сессия</div>
+          <div class="panel-body">
+            <div class="dropzone" id="dropzone" tabindex="0">
+              <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.json" hidden />
+              <div class="dropzone-icon">+</div>
+              <div class="dropzone-text">
+                Перетащите файл продаж или нажмите<br />
+                <span class="dropzone-hint">.xlsx · .xls · .csv · .json</span>
+              </div>
+            </div>
+            <div id="fileSummary" class="file-summary hidden"></div>
+
+            <div class="field">
+              <label>Системный промпт</label>
+              <div class="prompt-templates" id="templateChips"></div>
+              <textarea id="systemPromptBox" rows="7" placeholder="Загрузка…"></textarea>
+              <div class="field-actions">
+                <button id="savePromptBtn" class="btn-ghost" type="button">Сохранить как системный</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Мои промпты</label>
+              <ul id="customPrompts" class="prompt-list"></ul>
+              <div class="new-prompt">
+                <input id="newPromptName" type="text" placeholder="Название промпта" />
+                <button id="newPromptSave" class="btn-ghost" type="button">+ Сохранить текст из поля ввода</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel-chat">
+          <div class="panel-head">
+            <span class="panel-index">02</span>Диалог
+            <label class="stream-toggle">
+              <input type="checkbox" id="streamToggle" />
+              быстрый режим <span class="stream-toggle-hint">(без данных/графиков)</span>
+            </label>
+          </div>
+          <div class="chat-log" id="chatLog">
+            <div class="chat-empty">
+              Загрузите файл продаж слева и задайте вопрос — агент сам выберет pandas или plotly и, если нужно, построит график.
+            </div>
+          </div>
+          <form class="chat-input" id="chatForm">
+            <textarea id="chatInput" rows="1" placeholder="Спросите про выручку, топ товаров, аномалии…"></textarea>
+            <button type="submit" id="chatSend">Отправить</button>
+          </form>
+        </section>
+
+        <section class="panel panel-charts">
+          <div class="panel-head">
+            <span class="panel-index">03</span>Графики
+            <button id="refreshCharts" class="icon-btn small" title="Обновить список" type="button">&#8635;</button>
+          </div>
+          <div class="chart-grid" id="chartGrid">
+            <div class="chart-empty">Графики появятся здесь после того, как агент их построит.</div>
+          </div>
+        </section>
+      </main>
+
+      <div class="modal hidden" id="chartModal">
+        <div class="modal-backdrop" id="chartModalBackdrop"></div>
+        <div class="modal-body">
+          <div class="modal-head">
+            <span id="chartModalTitle"></span>
+            <button id="chartModalClose" class="icon-btn" type="button">&times;</button>
+          </div>
+          <iframe id="chartFrame" class="chart-frame" title="chart"></iframe>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
